@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/components/post_card.dart';
 import 'edit_profile_screen.dart'; // Importação da tela de edição
 import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
 
@@ -11,8 +12,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
-  Map<String, dynamic> _userData = {}; // Dados do usuário
-  List<String> _userPosts = []; // Lista de postagens do usuário
+  Map<String, dynamic> _userData = {};
+  List<Map<String, String>> _userPosts = [];
+  List<Map<String, String>> _followers = [];
 
   @override
   void initState() {
@@ -20,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadProfile();
   }
 
-  // Simula o carregamento do perfil e postagens
+  // Simula o carregamento dos dados do perfil
   Future<void> _loadProfile() async {
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
@@ -32,9 +34,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "following": 80,
       };
       _userPosts = [
-        "Primeira postagem do usuário...",
-        "Outra postagem do usuário...",
-        "Mais uma postagem para teste...",
+        {
+          "userName": "João Silva",
+          "userLogin": "joaosilva",
+          "content": "Minha primeira postagem!"
+        },
+        {
+          "userName": "João Silva",
+          "userLogin": "joaosilva",
+          "content": "Mais um post no meu feed!"
+        },
+      ];
+      _followers = [
+        {"name": "Maria Oliveira", "login": "maria_oliveira"},
+        {"name": "Carlos Souza", "login": "carlossouza"},
+        {"name": "Ana Paula", "login": "anapaula"},
       ];
     });
   }
@@ -69,76 +83,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _userData["name"] ?? "",
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "@${_userData["login"]}",
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("${_userData["followers"]} Seguidores"),
-                          Text("${_userData["following"]} Seguindo"),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-                          );
-                        },
-                        child: const Text("Editar Perfil"),
-                      ),
+          : DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  // Cabeçalho com informações do usuário
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _userData["name"] ?? "",
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "@${_userData["login"]}",
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            
+                          },
+                          child: const Text("Seguir"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // TabBar para alternar entre postagens e seguidores
+                  const TabBar(
+                    indicatorColor: Colors.blue,
+                    labelColor: Colors.blue,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(text: "Postagens"),
+                      Tab(text: "Seguidores"),
                     ],
                   ),
-                ),
-                const Divider(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _userPosts.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _userPosts[index],
-                                style: const TextStyle(fontSize: 16),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // Aba de Postagens do Usuário
+                        _userPosts.isEmpty
+                            ? const Center(child: Text("Nenhuma postagem"))
+                            : ListView.builder(
+                                itemCount: _userPosts.length,
+                                itemBuilder: (context, index) {
+                                  final post = _userPosts[index];
+                                  return PostCard(
+                                    userName: post["userName"]!,
+                                    userLogin: post["userLogin"]!,
+                                    postContent: post["content"]!,
+                                    onDelete: () => _deletePost(index),
+                                    showFollowerButton: false,
+                                  );
+                                },
                               ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _deletePost(index),
-                                ),
+                        // Aba de Seguidores
+                        _followers.isEmpty
+                            ? const Center(child: Text("Nenhum seguidor"))
+                            : ListView.builder(
+                                itemCount: _followers.length,
+                                itemBuilder: (context, index) {
+                                  final follower = _followers[index];
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                      child: Text(follower["name"]![0]),
+                                    ),
+                                    title: Text(follower["name"]!),
+                                    subtitle: Text("@${follower["login"]!}"),
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-
-      // Barra de navegação inferior
       bottomNavigationBar: const BottomNavigation(currentIndex: 3),
     );
   }

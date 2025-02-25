@@ -129,9 +129,15 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 const SizedBox(height: 24.0),
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _handleCadastro,
-                        child: const Text('Cadastrar'),
+                    : SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _handleCadastro,
+                          child: const Text('Cadastrar'),
+                          style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                        ),
                       ),
                 const SizedBox(height: 16.0),
                 TextButton(

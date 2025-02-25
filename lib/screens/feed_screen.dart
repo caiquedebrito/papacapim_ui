@@ -58,6 +58,7 @@ class FeedScreen extends StatelessWidget {
                   postContent: post["content"]!,
                   onLike: () => print("Curtir ${post["content"]}"),
                   onComment: () => print("Comentar em ${post["content"]}"),
+                  showFollowerButton: false,
                 );
               },
             ),

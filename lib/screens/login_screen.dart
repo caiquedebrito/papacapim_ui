@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false;
     });
 
-    // Após login bem-sucedido, navegue para a tela de feed (por exemplo)
+    // Após login bem-sucedido, navegue para a tela de feed 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FeedScreen()));
   }
 
@@ -86,9 +86,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24.0),
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _handleLogin,
-                        child: const Text('Entrar'),
+                    : SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _handleLogin,
+                          child: const Text('Entrar'),
+                          style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                        ),
                       ),
                 const SizedBox(height: 16.0),
                 TextButton(

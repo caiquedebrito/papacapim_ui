@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
-import 'package:papacapim_ui/screens/profile_screen.dart';
 
 void main() {
   runApp(const MainApp());
