@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/feed_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/new_post_screen.dart';
-import '../screens/profile_screen.dart';
+import '../screens/my_profile_screen.dart';
 
 class BottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -24,7 +24,7 @@ class BottomNavigation extends StatelessWidget {
         destination = const NewPostScreen();
         break;
       case 3:
-        destination = const ProfileScreen();
+        destination = const MyProfileScreen();
         break;
       default:
         return;
