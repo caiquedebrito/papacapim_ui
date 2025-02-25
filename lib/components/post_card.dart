@@ -8,6 +8,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback? onLike;
   final VoidCallback? onComment;
   final VoidCallback? onDelete;
+  final VoidCallback? onUserTap; // 🔥 Callback para quando clicar no login
   final bool showDeleteButton;
 
   const PostCard({
@@ -18,6 +19,7 @@ class PostCard extends StatelessWidget {
     this.onLike,
     this.onComment,
     this.onDelete,
+    this.onUserTap,
     this.showDeleteButton = false, // Define se o botão de deletar aparecerá (para perfil do usuário)
   }) : super(key: key);
 
@@ -68,6 +70,10 @@ class PostCard extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.thumb_up_alt_outlined),
+                  onPressed: onLike,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.thumb_down_alt_outlined),
                   onPressed: onLike,
                 ),
                 IconButton(
