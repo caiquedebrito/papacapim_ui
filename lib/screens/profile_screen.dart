@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import 'edit_profile_screen.dart'; // Importação da tela de edição
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -30,8 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userData = {
         "name": "João Silva",
         "login": "joaosilva",
-        "followers": 120,
-        "following": 80,
+        "created_at": "2024",
       };
       _userPosts = [
         {
@@ -69,29 +67,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Perfil"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-              );
-            },
-            icon: const Icon(Icons.edit),
-          )
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : DefaultTabController(
               length: 2,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Cabeçalho com informações do usuário
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           _userData["name"] ?? "",
@@ -101,10 +88,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
+                        Text(
+                          "${_followers.length} seguidores",
+                        ),
+                        Text("Desde 2024"),
                         ElevatedButton(
-                          onPressed: () {
-                            
-                          },
+                          onPressed: () {},
                           child: const Text("Seguir"),
                         ),
                       ],
@@ -146,13 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 itemCount: _followers.length,
                                 itemBuilder: (context, index) {
                                   final follower = _followers[index];
-                                  return ListTile(
-                                    leading: CircleAvatar(
-                                      child: Text(follower["name"]![0]),
-                                    ),
-                                    title: Text(follower["name"]!),
-                                    subtitle: Text("@${follower["login"]!}"),
-                                  );
+                                  return FollowerCard(userName: follower["name"]!, userLogin: follower["login"]!);
                                 },
                               ),
                       ],
@@ -161,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: const BottomNavigation(currentIndex: 3),
+      // bottomNavigationBar: const BottomNavigation(currentIndex: 3),
     );
   }
 }

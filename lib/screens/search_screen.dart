@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'my_profile_screen.dart'; // Importação da tela de perfil do usuário
+import 'package:papacapim_ui/screens/profile_screen.dart';
 import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
 
 class SearchScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const MyProfileScreen(),
+                              builder: (context) => const ProfileScreen(),
                             ),
                           );
                         },

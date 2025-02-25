@@ -37,7 +37,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     );
 
     // Voltar para o feed após postar
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   @override
@@ -51,12 +51,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nova Postagem"),
-        actions: [
-          IconButton(
-            onPressed: _handlePost,
-            icon: const Icon(Icons.send),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,6 +74,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 : ElevatedButton(
                     onPressed: _handlePost,
                     child: const Text("Postar"),
+                    
                   ),
           ],
         ),

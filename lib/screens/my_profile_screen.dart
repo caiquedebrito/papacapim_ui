@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
 import 'edit_profile_screen.dart'; // Importação da tela de edição
 import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
@@ -69,23 +70,13 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Perfil"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-              );
-            },
-            icon: const Icon(Icons.edit),
-          )
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : DefaultTabController(
               length: 2,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Cabeçalho com informações do usuário
                   Padding(
@@ -159,13 +150,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                 itemCount: _followers.length,
                                 itemBuilder: (context, index) {
                                   final follower = _followers[index];
-                                  return ListTile(
-                                    leading: CircleAvatar(
-                                      child: Text(follower["name"]![0]),
-                                    ),
-                                    title: Text(follower["name"]!),
-                                    subtitle: Text("@${follower["login"]!}"),
-                                  );
+                                  return FollowerCard(userName: follower["name"]!, userLogin: follower["login"]!);
                                 },
                               ),
                       ],

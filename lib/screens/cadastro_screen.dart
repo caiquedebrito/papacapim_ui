@@ -56,7 +56,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro'),
+        title: const Text('Papacapim Cadastro'),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -133,10 +133,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _handleCadastro,
-                          child: const Text('Cadastrar'),
                           style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           ),
+                          child: const Text('Cadastrar'),
                         ),
                       ),
                 const SizedBox(height: 16.0),
