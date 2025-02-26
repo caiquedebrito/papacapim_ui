@@ -1,3 +1,5 @@
 # papacapim_ui
 
-A new Flutter project.
+Papacapim é uma rede social baseada em posts de texto.
+
+Esse é o aplicativo mobile que consume a api. 
