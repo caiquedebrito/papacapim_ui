@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'cadastro_screen.dart';
-import 'feed_screen.dart';
+import 'package:papacapim_ui/screens/cadastro_screen.dart';
+import 'package:papacapim_ui/screens/feed_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,26 +39,103 @@ class _LoginScreenState extends State<LoginScreen> {
     // Após login bem-sucedido, navegue para a tela de feed 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FeedScreen()));
   }
-
+  
   @override
   Widget build(BuildContext context) {
+    const Color primaryGreen = Color.fromARGB(255, 189, 255, 67);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Papacapim Login'),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
+      body: Stack(
+        children: [
+          Container(color: const Color.fromARGB(255, 37, 37, 37)),
+          Positioned(
+            top: -150,
+            left: -180,
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [
+                  primaryGreen.withOpacity(0.5),
+                  Colors.transparent,
+                ]),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -150,
+            right: -180,
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [
+                  primaryGreen.withOpacity(0.5),
+                  Colors.transparent,
+                ]),
+              ),
+            ),
+          ),
+
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+            child: Form(
+              key: _formKey,
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text(
+                    'Papa',
+                    style: TextStyle(
+                    color: primaryGreen,
+                    fontSize: 64,
+                    fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    'Capim',
+                    style: TextStyle(
+                    color: primaryGreen,
+                    fontSize: 64,
+                    fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+
+                const Text(
+                  'Bem-vindo à primeira rede social da Bahia!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 50),
+
                 TextFormField(
                   controller: _loginController,
+                  style: const TextStyle(color: Colors.white),
+                  cursorColor: primaryGreen,
                   decoration: const InputDecoration(
-                    labelText: 'Login',
-                    hintText: 'Digite seu usuário',
-                    border: OutlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white54),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    hintText: 'Login',
+                    hintStyle: TextStyle(color: Colors.white54),
+                    icon: Icon(
+                      Icons.login,
+                      color: Colors.white,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -67,14 +144,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 20),
+
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
+                  style: const TextStyle(color: Colors.white),
+                  cursorColor: primaryGreen,
                   decoration: const InputDecoration(
-                    labelText: 'Senha',
-                    hintText: 'Digite sua senha',
-                    border: OutlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white54),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    hintText: 'Senha',
+                    hintStyle: TextStyle(color: Colors.white54),
+                    icon: Icon(
+                      Icons.lock,
+                      color: Colors.white,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -83,36 +172,63 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 24.0),
-                _isLoading
-                    ? const CircularProgressIndicator()
-                    : SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _handleLogin,
-                          child: const Text('Entrar'),
-                          style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          ),
-                        ),
+                const SizedBox(height: 30),
+
+                _isLoading 
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryGreen,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                const SizedBox(height: 16.0),
-                TextButton(
-                  onPressed: () {
-                    // Navega para a tela de cadastro
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CadastroScreen(),
+                    ),
+                    onPressed: _handleLogin,
+                    child: const Text(
+                      'Entrar',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
-                  child: const Text('Não tem conta? Cadastre-se'),
+                    ),
+                  ),
                 ),
+
+                const SizedBox(height: 40),
+
+                Center(
+                  child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CadastroScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                    'Novo no Papacapim? Registrar',
+                    style: TextStyle(
+                      color: primaryGreen.withOpacity(0.9),
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                    ),
+                    ),
+                  ),
+                  ),
+                ),
+                // ),
               ],
             ),
+            )
           ),
-        ),
+        ],
       ),
     );
   }

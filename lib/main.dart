@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(), // Tela de login conectada como tela inicial.
+      home: const LoginScreen(),
     );
   }
 }
