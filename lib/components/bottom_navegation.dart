@@ -7,7 +7,8 @@ import '../screens/my_profile_screen.dart';
 class BottomNavigation extends StatelessWidget {
   final int currentIndex;
 
-  const BottomNavigation({Key? key, required this.currentIndex}) : super(key: key);
+  const BottomNavigation({Key? key, required this.currentIndex})
+      : super(key: key);
 
   void _onItemTapped(BuildContext context, int index) {
     if (index == currentIndex) return; // Evita recarregar a mesma tela
@@ -41,16 +42,21 @@ class BottomNavigation extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onItemTapped(context, index),
-      backgroundColor: Colors.white, // Define a cor de fundo do BottomNavigationBar
-      selectedItemColor: Colors.blue, // Cor do item selecionado
-      unselectedItemColor: Colors.black, // Cor dos itens não selecionados
+      backgroundColor:
+          Color(0xFF252525), // Define a cor de fundo do BottomNavigationBar
+      selectedItemColor: Color(0xFFD8FF6F), // Cor do item selecionado
+      unselectedItemColor: Color(0xFF252525), // Cor dos itens não selecionados
       showSelectedLabels: true, // Exibir rótulo do item selecionado
       showUnselectedLabels: false, // Esconder rótulo dos itens não selecionados
       elevation: 10, // Adiciona sombra para destacar o menu
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Feed", backgroundColor: Colors.white),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Feed",
+            backgroundColor: Colors.black),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: "Buscar"),
-        BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline), label: "Postar"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline), label: "Postar"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
       ],
     );

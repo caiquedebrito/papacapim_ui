@@ -22,86 +22,123 @@ class PostCard extends StatelessWidget {
     this.onComment,
     this.onDelete,
     this.onUserTap,
-    this.showDeleteButton = false, // Define se o botão de deletar aparecerá (para perfil do usuário)
-    this.showFollowerButton = true, // Define se o botão de seguir aparecerá (para outros usuários)
+    this.showDeleteButton =
+        false, // Define se o botão de deletar aparecerá (para perfil do usuário)
+    this.showFollowerButton =
+        true, // Define se o botão de seguir aparecerá (para outros usuários)
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Nome do usuário e botão de opções/excluir
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-                      }, 
-                      child: Text(
-                        "@$userLogin",
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+    return Container(
+      decoration: const BoxDecoration(),
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        color: Colors.black,
+        elevation: 8.0,
+        shadowColor: Color(0xFFD8FF6F),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Nome do usuário e botão de opções/excluir
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfileScreen()));
+                        },
+                        child: Text(
+                          "@$userLogin",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
                       ),
-                    )                    ,
-                    Text(
-                      "há 2 horas",
-                      style: const TextStyle(fontWeight: FontWeight.normal, color: Colors.grey),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 13.0, bottom: 5),
+                        child: Text(
+                          "há 2 horas",
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 83, 83, 83)),
+                        ),
+                      )
+                    ],
+                  ),
+                  if (showFollowerButton)
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F63FF),
+                      ),
+                      child: const Text("Seguir",
+                          style: TextStyle(color: Colors.white)),
                     ),
-                  ],
+                  if (showDeleteButton && onDelete != null)
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: onDelete,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              // Conteúdo da postagem
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 13.0), // Espaço em cima, embaixo e nas laterais
+                child: Text(
+                  postContent,
+                  style: const TextStyle(
+                      // fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      color: Colors.white),
                 ),
-                if (showFollowerButton)
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Seguir"),
+              ),
+
+              // Botões de curtir e comentar
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
+                    child: IconButton(
+                      icon: const Icon(Icons.thumb_up_alt_outlined,
+                          color: Color(0xFFD8FF6F)),
+                      onPressed: onLike,
+                    ),
                   ),
-                if (showDeleteButton && onDelete != null)
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: onDelete,
+                    icon: const Icon(Icons.thumb_down_alt_outlined,
+                        color: Color(0xFFD8FF6F)),
+                    onPressed: onLike,
                   ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Conteúdo da postagem
-            Text(
-              postContent,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-
-            // Botões de curtir e comentar
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.thumb_up_alt_outlined),
-                  onPressed: onLike,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.thumb_down_alt_outlined),
-                  onPressed: onLike,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.comment_outlined),
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RepliesScreen(
-                      userName: userName,
-                      userLogin: userLogin,
-                      postContent: postContent,
-                    )));
-                  },
-                ),
-              ],
-            ),
-          ],
+                  IconButton(
+                    icon: const Icon(Icons.comment_outlined,
+                        color: Color(0xFFD8FF6F)),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RepliesScreen(
+                                    userName: userName,
+                                    userLogin: userLogin,
+                                    postContent: postContent,
+                                  )));
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
