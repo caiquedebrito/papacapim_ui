@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/screens/cadastro_screen.dart';
 import 'package:papacapim_ui/screens/feed_screen.dart';
 
@@ -36,18 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false;
     });
 
-    // Após login bem-sucedido, navegue para a tela de feed 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FeedScreen()));
   }
   
   @override
   Widget build(BuildContext context) {
-    const Color primaryGreen = Color.fromARGB(255, 189, 255, 67);
-
     return Scaffold(
       body: Stack(
         children: [
-          Container(color: const Color.fromARGB(255, 37, 37, 37)),
+          Container(color: AppColors.black),
           Positioned(
             top: -150,
             left: -180,
@@ -57,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(colors: [
-                  primaryGreen.withOpacity(0.5),
+                  AppColors.green.withOpacity(0.5),
                   Colors.transparent,
                 ]),
               ),
@@ -72,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(colors: [
-                  primaryGreen.withOpacity(0.5),
+                  AppColors.green.withOpacity(0.5),
                   Colors.transparent,
                 ]),
               ),
@@ -86,13 +84,13 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                   Text(
                     'Papa',
                     style: TextStyle(
-                    color: primaryGreen,
+                    color: AppColors.green,
                     fontSize: 64,
                     fontWeight: FontWeight.normal,
                     ),
@@ -100,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Capim',
                     style: TextStyle(
-                    color: primaryGreen,
+                    color: AppColors.green,
                     fontSize: 64,
                     fontWeight: FontWeight.bold,
                     ),
@@ -122,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   controller: _loginController,
                   style: const TextStyle(color: Colors.white),
-                  cursorColor: primaryGreen,
+                  cursorColor: AppColors.green,
                   decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white54),
@@ -150,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   obscureText: true,
                   style: const TextStyle(color: Colors.white),
-                  cursorColor: primaryGreen,
+                  cursorColor: AppColors.green,
                   decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white54),
@@ -181,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryGreen,
+                      backgroundColor: AppColors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -215,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                     'Novo no Papacapim? Registrar',
                     style: TextStyle(
-                      color: primaryGreen.withOpacity(0.9),
+                      color: AppColors.green.withOpacity(0.9),
                       fontSize: 14,
                       decoration: TextDecoration.underline,
                     ),
