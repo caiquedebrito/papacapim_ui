@@ -77,7 +77,7 @@ class FeedScreen extends StatelessWidget {
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.grey,
                 tabs: [
-                  Tab(text: "Meu Feed  teste"),
+                  Tab(text: "Meu Feed"),
                   Tab(text: "Seguindo"),
                 ],
               ),

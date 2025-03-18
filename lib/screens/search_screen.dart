@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/screens/profile_screen.dart';
 import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import '../constants/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -56,8 +57,11 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Buscar Usuários"),
+        title: const Text("Buscar Usuários",
+            style: TextStyle(color: Color(0xFFD8FF6F))),
+        backgroundColor: AppColors.black,
       ),
+      backgroundColor: AppColors.black,
       body: Column(
         children: [
           Padding(
@@ -67,7 +71,12 @@ class _SearchScreenState extends State<SearchScreen> {
               onChanged: _filterUsers,
               decoration: const InputDecoration(
                 hintText: "Digite o nome ou @usuário...",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Colors.grey, // Cor da borda padrão
+                    width: 2.0, // Espessura da borda
+                  ),
+                ),
                 prefixIcon: Icon(Icons.search),
               ),
             ),
@@ -80,9 +89,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     itemBuilder: (context, index) {
                       final user = _filteredUsers[index];
                       return ListTile(
-                        title: Text(user["name"]!),
-                        subtitle: Text("@${user["login"]}"),
-                        trailing: const Icon(Icons.arrow_forward),
+                        title: Text(user["name"]!,
+                            style: const TextStyle(color: Colors.white)),
+                        subtitle: Text("@${user["login"]}",
+                            style: const TextStyle(
+                                color: Color.fromARGB(171, 255, 255, 255),
+                                fontSize: 12)),
+                        trailing: const Icon(Icons.arrow_forward,
+                            color: Color(0xFFD8FF6F)),
                         onTap: () {
                           // TODO: Implementar a navegação para o perfil do usuário
                           Navigator.push(
@@ -99,7 +113,8 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
 
-      bottomNavigationBar: const BottomNavigation(currentIndex: 1), // Usando a navegação reutilizável
+      bottomNavigationBar: const BottomNavigation(
+          currentIndex: 1), // Usando a navegação reutilizável
     );
   }
 }

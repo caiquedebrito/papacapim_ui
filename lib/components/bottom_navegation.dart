@@ -51,21 +51,21 @@ class BottomNavigation extends StatelessWidget {
       elevation: 10,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: "Feed",
-        ),
+            icon: Icon(Icons.home),
+            label: "Feed",
+            backgroundColor: Colors.black),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: "Buscar",
-        ),
+            icon: Icon(Icons.search),
+            label: "Buscar",
+            backgroundColor: Colors.black),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_outline),
-          label: "Postar",
-        ),
+            icon: Icon(Icons.add_circle_outline),
+            label: "Postar",
+            backgroundColor: Colors.black),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: "Perfil",
-        ),
+            icon: Icon(Icons.person),
+            label: "Perfil",
+            backgroundColor: Colors.black),
       ],
     );
   }
