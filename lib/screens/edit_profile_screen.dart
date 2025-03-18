@@ -69,7 +69,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Editar Perfil"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -113,6 +115,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 : ElevatedButton(
                     onPressed: _saveChanges,
                     child: const Text("Salvar Alterações"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
           ],
         ),

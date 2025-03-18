@@ -38,15 +38,15 @@ class FeedScreen extends StatelessWidget {
       length: 2, // Número de abas
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF252525),
-          title: Row(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Papa",
                     style: TextStyle(
                       fontSize: 24,
@@ -54,7 +54,7 @@ class FeedScreen extends StatelessWidget {
                       color: Color(0xFFD8FF6F),
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Capim",
                     style: TextStyle(
                       fontSize: 24,
@@ -66,13 +66,13 @@ class FeedScreen extends StatelessWidget {
               ),
             ],
           ),
-          bottom: PreferredSize(
+          bottom: const PreferredSize(
             preferredSize: Size.fromHeight(50.0),
             child: ClipRRect(
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(30),
               ),
-              child: const TabBar(
+              child: TabBar(
                 indicatorColor: Color(0xFFD8FF6F),
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.grey,
@@ -93,14 +93,13 @@ class FeedScreen extends StatelessWidget {
                 itemCount: myFeedPosts.length,
                 itemBuilder: (context, index) {
                   final post = myFeedPosts[index];
-                  return Container(
-                      child: PostCard(
-                    userName: post["userName"]!,
-                    userLogin: post["userLogin"]!,
-                    postContent: post["content"]!,
-                    onLike: () => print("Curtir ${post["content"]}"),
-                    onComment: () => print("Comentar em ${post["content"]}"),
-                  ));
+                  return PostCard(
+                          userName: post["userName"]!,
+                          userLogin: post["userLogin"]!,
+                          postContent: post["content"]!,
+                          onLike: () => print("Curtir ${post["content"]}"),
+                          onComment: () => print("Comentar em ${post["content"]}"),
+                        );
                 },
               ),
 
@@ -109,15 +108,14 @@ class FeedScreen extends StatelessWidget {
                 itemCount: followingPosts.length,
                 itemBuilder: (context, index) {
                   final post = followingPosts[index];
-                  return Container(
-                      child: PostCard(
-                    userName: post["userName"]!,
-                    userLogin: post["userLogin"]!,
-                    postContent: post["content"]!,
-                    onLike: () => print("Curtir ${post["content"]}"),
-                    onComment: () => print("Comentar em ${post["content"]}"),
-                    showFollowerButton: false,
-                  ));
+                  return PostCard(
+                          userName: post["userName"]!,
+                          userLogin: post["userLogin"]!,
+                          postContent: post["content"]!,
+                          onLike: () => print("Curtir ${post["content"]}"),
+                          onComment: () => print("Comentar em ${post["content"]}"),
+                          showFollowerButton: false,
+                        );
                 },
               ),
             ],

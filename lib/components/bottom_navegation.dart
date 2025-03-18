@@ -40,33 +40,43 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return Container(
+      decoration: BoxDecoration(
+      border: Border(
+        top: BorderSide(
+        color: Colors.grey.shade300,
+        width: 1.0,
+        ),
+      ),
+      ),
+      child: BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onItemTapped(context, index),
-      backgroundColor: AppColors.black,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       selectedItemColor: AppColors.green,
       unselectedItemColor: Colors.white,
       showSelectedLabels: true,
       showUnselectedLabels: false,
       elevation: 10,
-      items: const [
+      items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Feed",
-            backgroundColor: Colors.black),
+          icon: const Icon(Icons.home),
+          label: "Feed",
+          backgroundColor: Theme.of(context).colorScheme.primary),
         BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: "Buscar",
-            backgroundColor: Colors.black),
+          icon: const Icon(Icons.search),
+          label: "Buscar",
+          backgroundColor: Theme.of(context).colorScheme.primary),
         BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: "Postar",
-            backgroundColor: Colors.black),
+          icon: const Icon(Icons.add_circle_outline),
+          label: "Postar",
+          backgroundColor: Theme.of(context).colorScheme.primary),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Perfil",
-            backgroundColor: Colors.black),
+          icon: const Icon(Icons.person),
+          label: "Perfil",
+          backgroundColor: Theme.of(context).colorScheme.primary),
       ],
+      ),
     );
   }
 }

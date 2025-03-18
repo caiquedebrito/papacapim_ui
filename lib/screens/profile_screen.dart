@@ -51,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Função para excluir uma postagem
   void _deletePost(int index) {
     setState(() {
       _userPosts.removeAt(index);
@@ -79,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           _userData["name"] ?? "",
@@ -88,12 +88,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
+                        const SizedBox(height: 8,),
+                        const Text("Desde 2024"),
+                        const SizedBox(height: 16,),
                         Text(
                           "${_followers.length} seguidores",
                         ),
-                        Text("Desde 2024"),
+                        const SizedBox(height: 8,),
                         ElevatedButton(
                           onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                          ),
                           child: const Text("Seguir"),
                         ),
                       ],

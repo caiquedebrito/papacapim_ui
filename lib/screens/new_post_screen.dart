@@ -51,7 +51,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nova Postagem"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -73,8 +75,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : ElevatedButton(
                     onPressed: _handlePost,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                    ),
                     child: const Text("Postar"),
-                    
                   ),
           ],
         ),

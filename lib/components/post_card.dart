@@ -9,7 +9,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback? onLike;
   final VoidCallback? onComment;
   final VoidCallback? onDelete;
-  final VoidCallback? onUserTap; // 🔥 Callback para quando clicar no login
+  final VoidCallback? onUserTap; 
   final bool showDeleteButton;
   final bool showFollowerButton;
 
@@ -34,9 +34,9 @@ class PostCard extends StatelessWidget {
       decoration: const BoxDecoration(),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        color: Colors.black,
+        color: Theme.of(context).colorScheme.primary,
         elevation: 8.0,
-        shadowColor: Color(0xFFD8FF6F),
+        // shadowColor: Theme.of(context).colorScheme.secondary,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -58,18 +58,28 @@ class PostCard extends StatelessWidget {
                         },
                         child: Text(
                           "@$userLogin",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                          style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 236, 236, 236)),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 13.0, bottom: 5),
-                        child: Text(
-                          "há 2 horas",
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 83, 83, 83)),
-                        ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 13.0, bottom: 5),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.fiber_manual_record,
+                              size: 8.0,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "há 2 horas",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        )
                       )
                     ],
                   ),
@@ -77,10 +87,10 @@ class PostCard extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0F63FF),
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
                       ),
                       child: const Text("Seguir",
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: Colors.black)),
                     ),
                   if (showDeleteButton && onDelete != null)
                     IconButton(
@@ -112,18 +122,18 @@ class PostCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 5.0),
                     child: IconButton(
                       icon: const Icon(Icons.thumb_up_alt_outlined,
-                          color: Color(0xFFD8FF6F)),
+                          color: Color.fromARGB(255, 221, 221, 221)),
                       onPressed: onLike,
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.thumb_down_alt_outlined,
-                        color: Color(0xFFD8FF6F)),
+                        color: Color.fromARGB(255, 221, 221, 221)),
                     onPressed: onLike,
                   ),
                   IconButton(
                     icon: const Icon(Icons.comment_outlined,
-                        color: Color(0xFFD8FF6F)),
+                        color: Color.fromARGB(255, 221, 221, 221)),
                     onPressed: () {
                       Navigator.pushReplacement(
                           context,

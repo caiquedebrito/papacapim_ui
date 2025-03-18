@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import 'edit_profile_screen.dart'; // Importação da tela de edição
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import 'edit_profile_screen.dart';
+import '../components/bottom_navegation.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -54,7 +54,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     });
   }
 
-  // Função para excluir uma postagem
   void _deletePost(int index) {
     setState(() {
       _userPosts.removeAt(index);
@@ -70,7 +69,9 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Perfil"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : DefaultTabController(
@@ -88,6 +89,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                           _userData["name"] ?? "",
                           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(height: 5),
                         Text(
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -101,6 +103,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                         //   ],
                         // ),
                         // const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -108,6 +111,9 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                               MaterialPageRoute(builder: (context) => const EditProfileScreen()),
                             );
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                          ),
                           child: const Text("Editar Perfil"),
                         ),
                       ],
@@ -115,8 +121,8 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                   ),
                   // TabBar para alternar entre postagens e seguidores
                   const TabBar(
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
+                    indicatorColor: Color(0xFFD8FF6F),
+                    labelColor: Colors.white,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Postagens"),

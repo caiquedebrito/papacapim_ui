@@ -72,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: const InputDecoration(
                 hintText: "Digite o nome ou @usuário...",
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(
+                  borderSide: BorderSide(
                     color: Colors.grey, // Cor da borda padrão
                     width: 2.0, // Espessura da borda
                   ),
