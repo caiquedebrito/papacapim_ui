@@ -56,11 +56,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Buscar Usuários",
-            style: TextStyle(color: Color(0xFFD8FF6F))),
-        backgroundColor: AppColors.black,
-      ),
       backgroundColor: AppColors.black,
       body: Column(
         children: [
@@ -73,8 +68,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 hintText: "Digite o nome ou @usuário...",
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey, // Cor da borda padrão
-                    width: 2.0, // Espessura da borda
+                    color: Colors.grey,
+                    width: 2.0,
                   ),
                 ),
                 prefixIcon: Icon(Icons.search),
@@ -114,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
 
       bottomNavigationBar: const BottomNavigation(
-          currentIndex: 1), // Usando a navegação reutilizável
+          currentIndex: 1),
     );
   }
 }

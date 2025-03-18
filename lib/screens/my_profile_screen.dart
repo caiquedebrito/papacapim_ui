@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
+import 'package:papacapim_ui/screens/login_screen.dart';
 import 'edit_profile_screen.dart';
 import '../components/bottom_navegation.dart';
 
@@ -67,10 +68,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Perfil"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -94,28 +91,30 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
-                        // const SizedBox(height: 10),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Text("${_userData["followers"]} Seguidores"),
-                        //     Text("${_userData["following"]} Seguindo"),
-                        //   ],
-                        // ),
-                        // const SizedBox(height: 10),
                         const SizedBox(height: 5),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.secondary,
-                          ),
-                          child: const Text("Editar Perfil"),
-                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: const Text("Editar Perfil"),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+                              },
+                              icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.secondary,)
+                            )
+                          ],
+                        )
                       ],
                     ),
                   ),

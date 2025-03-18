@@ -39,6 +39,7 @@ class FeedScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
+          automaticallyImplyLeading: false,
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

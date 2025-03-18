@@ -50,6 +50,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("Nova Postagem"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),

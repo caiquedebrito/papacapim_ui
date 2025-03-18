@@ -64,11 +64,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         title: const Text("Perfil"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary,))
           : DefaultTabController(
               length: 2,
               child: Column(
@@ -107,8 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   // TabBar para alternar entre postagens e seguidores
                   const TabBar(
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
+                    indicatorColor: Color(0xFFD8FF6F),
+                    labelColor: Colors.white,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Postagens"),

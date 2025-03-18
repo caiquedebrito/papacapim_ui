@@ -77,153 +77,154 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
             child: Form(
-              key: _formKey,
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  Text(
-                    'Papa',
-                    style: TextStyle(
-                    color: AppColors.green,
-                    fontSize: 64,
-                    fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  Text(
-                    'Capim',
-                    style: TextStyle(
-                    color: AppColors.green,
-                    fontSize: 64,
-                    fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  ],
-                ),
-                const SizedBox(height: 50),
-
-                const Text(
-                  'Bem-vindo à primeira rede social da Bahia!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 50),
-
-                TextFormField(
-                  controller: _loginController,
-                  style: const TextStyle(color: Colors.white),
-                  cursorColor: AppColors.green,
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    hintText: 'Login',
-                    hintStyle: TextStyle(color: Colors.white54),
-                    icon: Icon(
-                      Icons.login,
-                      color: Colors.white,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu login';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  style: const TextStyle(color: Colors.white),
-                  cursorColor: AppColors.green,
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    hintText: 'Senha',
-                    hintStyle: TextStyle(color: Colors.white54),
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.white,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira sua senha';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 30),
-
-                _isLoading 
-                  ? const CircularProgressIndicator()
-                  : SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    onPressed: _handleLogin,
-                    child: const Text(
-                      'Entrar',
+                key: _formKey,
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text(
+                      'Papa',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      color: AppColors.green,
+                      fontSize: 64,
+                      fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      'Capim',
+                      style: TextStyle(
+                      color: AppColors.green,
+                      fontSize: 64,
+                      fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ],
+                  ),
+                  const SizedBox(height: 50),
+            
+                  const Text(
+                    'Bem-vindo à primeira rede social da Bahia!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 50),
+            
+                  TextFormField(
+                    controller: _loginController,
+                    style: const TextStyle(color: Colors.white),
+                    cursorColor: AppColors.green,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      hintText: 'Login',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      icon: Icon(
+                        Icons.login,
+                        color: Colors.white,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu login';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+            
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    style: const TextStyle(color: Colors.white),
+                    cursorColor: AppColors.green,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      hintText: 'Senha',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      icon: Icon(
+                        Icons.lock,
+                        color: Colors.white,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira sua senha';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+            
+                  _isLoading 
+                    ? CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary,)
+                    : SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      onPressed: _handleLogin,
+                      child: const Text(
+                        'Entrar',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 40),
-
-                Center(
-                  child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CadastroScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                    'Novo no Papacapim? Registrar',
-                    style: TextStyle(
-                      color: AppColors.green.withOpacity(0.9),
-                      fontSize: 14,
+            
+                  const SizedBox(height: 40),
+            
+                  Center(
+                    child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CadastroScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                      'Novo no Papacapim? Registrar',
+                      style: TextStyle(
+                        color: AppColors.green.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                      ),
                     ),
                     ),
                   ),
-                  ),
-                ),
-              ],
-            ),
-            )
-          ),
+                ],
+              ),
+              ),
+          )
         ],
       ),
     );
