@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
 
 void main() {
@@ -13,7 +14,10 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Papacapim App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.dark(
+          primary: AppColors.black,
+          secondary: AppColors.green,
+        ),
       ),
       home: const LoginScreen(),
     );

@@ -215,13 +215,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       color: AppColors.green.withOpacity(0.9),
                       fontSize: 14,
-                      decoration: TextDecoration.underline,
                     ),
                     ),
                   ),
                   ),
                 ),
-                // ),
               ],
             ),
             )

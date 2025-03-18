@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/constants/app_colors.dart';
 import '../screens/feed_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/new_post_screen.dart';
@@ -42,22 +43,29 @@ class BottomNavigation extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onItemTapped(context, index),
-      backgroundColor:
-          Color(0xFF252525), // Define a cor de fundo do BottomNavigationBar
-      selectedItemColor: Color(0xFFD8FF6F), // Cor do item selecionado
-      unselectedItemColor: Color(0xFF252525), // Cor dos itens não selecionados
-      showSelectedLabels: true, // Exibir rótulo do item selecionado
-      showUnselectedLabels: false, // Esconder rótulo dos itens não selecionados
-      elevation: 10, // Adiciona sombra para destacar o menu
+      backgroundColor: AppColors.black,
+      selectedItemColor: AppColors.green,
+      unselectedItemColor: Colors.white,
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
+      elevation: 10,
       items: const [
         BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Feed",
-            backgroundColor: Colors.black),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Buscar"),
+          icon: Icon(Icons.home),
+          label: "Feed",
+        ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline), label: "Postar"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+          icon: Icon(Icons.search),
+          label: "Buscar",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_circle_outline),
+          label: "Postar",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: "Perfil",
+        ),
       ],
     );
   }
