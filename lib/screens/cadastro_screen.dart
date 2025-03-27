@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
+import 'package:papacapim_ui/models/CreatedUser.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({super.key});
@@ -27,6 +31,29 @@ class _CadastroScreenState extends State<CadastroScreen> {
     super.dispose();
   }
 
+  Future<Createduser> _createUser() async {
+    final response = await http.post(
+      Uri.parse('https://api.papacapim.just.pro.br/users'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: json.encode({
+        'user': {
+          'login': _loginController.text,
+          'name': _nameController.text,
+          'password': _passwordController.text,
+          'password_confirmation': _passwordConfirmController.text
+        }
+      })
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Erro ao criar usuário');
+    }
+
+    return Createduser.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
   Future<void> _handleCadastro() async {
     if (!_formKey.currentState!.validate()) return;
     if (_passwordController.text != _passwordConfirmController.text) {
@@ -39,20 +66,23 @@ class _CadastroScreenState extends State<CadastroScreen> {
     setState(() {
       _isLoading = true;
     });
+    try {
+      Createduser user = await _createUser();
 
-    // TODO: Implementar a chamada à API para criação do usuário.
-    await Future.delayed(const Duration(seconds: 2));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário ${user.login} Cadastro realizado com sucesso')),
+      );
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cadastro realizado com sucesso')),
-    );
-
-    // Navega de volta para a tela de login após cadastro
-    Navigator.pop(context);
+      Navigator.pop(context);
+    } catch(error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao cadastrar usuário!')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }   
   }
 
   @override
