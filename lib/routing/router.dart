@@ -11,6 +11,7 @@ import 'package:papacapim_ui/screens/new_post_screen.dart';
 import 'package:papacapim_ui/screens/profile_screen.dart';
 import 'package:papacapim_ui/screens/replies_screen.dart';
 import 'package:papacapim_ui/screens/search_screen.dart';
+import 'package:papacapim_ui/states/global_state.dart';
 
 GoRouter router() => GoRouter(
   initialLocation: Routes.login,
@@ -79,5 +80,16 @@ GoRouter router() => GoRouter(
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
-  return Routes.feed;
+  final bool loggedIn = GlobalSession().session != null;
+    final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
+
+    if (!loggedIn && !loggingIn) {
+      return '/login';
+    }
+    
+    if (loggedIn && loggingIn) {
+      return '/feed';
+    }
+
+    return null;
 }

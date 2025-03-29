@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
@@ -24,7 +25,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     _loadProfile();
   }
 
-  // Simula o carregamento dos dados do perfil
   Future<void> _loadProfile() async {
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
@@ -76,7 +76,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Cabeçalho com informações do usuário
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -109,7 +108,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                             ),
                             IconButton(
                               onPressed: () {
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+                                context.go('/login');
                               },
                               icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.secondary,)
                             )
@@ -131,7 +130,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        // Aba de Postagens do Usuário
                         _userPosts.isEmpty
                             ? const Center(child: Text("Nenhuma postagem"))
                             : ListView.builder(
@@ -148,7 +146,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                   );
                                 },
                               ),
-                        // Aba de Seguidores
                         _followers.isEmpty
                             ? const Center(child: Text("Nenhum seguidor"))
                             : ListView.builder(
