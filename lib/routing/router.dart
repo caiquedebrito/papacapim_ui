@@ -52,12 +52,17 @@ GoRouter router() => GoRouter(
         return const NewPostScreen();
       }
     ),
-    // GoRoute(
-    //   path: Routes.replies,
-    //   builder: (context, state) {
-    //     return const RepliesScreen();
-    //   }
-    // ),
+    GoRoute(
+      path: '/replies',
+      builder: (context, state) {
+        final args = state.extra as Map<String, String>;
+        return RepliesScreen(
+          userName: args['userName']!,
+          userLogin: args['userLogin']!,
+          postContent: args['postContent']!,
+        );
+      },
+    ),
     GoRoute(
       path: Routes.search,
       builder: (context, state) {
