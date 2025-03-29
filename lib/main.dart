@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
-import 'package:papacapim_ui/screens/login_screen.dart';
+import 'package:papacapim_ui/routing/router.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,7 +11,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Papacapim App',
       theme: ThemeData(
         colorScheme: ColorScheme.dark(
@@ -19,7 +19,7 @@ class MainApp extends StatelessWidget {
           secondary: AppColors.green,
         ),
       ),
-      home: const LoginScreen(),
+      routerConfig: router(),
     );
   }
 }
