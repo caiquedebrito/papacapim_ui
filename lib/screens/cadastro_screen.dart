@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
+import 'package:papacapim_ui/models/CreatedUser.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({super.key});
@@ -14,7 +18,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -24,6 +29,29 @@ class _CadastroScreenState extends State<CadastroScreen> {
     _passwordController.dispose();
     _passwordConfirmController.dispose();
     super.dispose();
+  }
+
+  Future<Createduser> _createUser() async {
+    final response = await http.post(
+      Uri.parse('https://api.papacapim.just.pro.br/users'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: json.encode({
+        'user': {
+          'login': _loginController.text,
+          'name': _nameController.text,
+          'password': _passwordController.text,
+          'password_confirmation': _passwordConfirmController.text
+        }
+      })
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Erro ao criar usuário');
+    }
+
+    return Createduser.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
   Future<void> _handleCadastro() async {
@@ -38,42 +66,47 @@ class _CadastroScreenState extends State<CadastroScreen> {
     setState(() {
       _isLoading = true;
     });
+    try {
+      Createduser user = await _createUser();
 
-    // TODO: Implementar a chamada à API para criação do usuário.
-    await Future.delayed(const Duration(seconds: 2));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário ${user.login} Cadastro realizado com sucesso')),
+      );
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cadastro realizado com sucesso')),
-    );
-
-    // Navega de volta para a tela de login após cadastro
-    Navigator.pop(context);
+      Navigator.pop(context);
+    } catch(error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao cadastrar usuário!')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }   
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.black,
-              AppColors.green,
-            ],
-            begin: Alignment.topCenter,
-            end: const Alignment(0.0, 15),
+      body: Stack(children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.black,
+                AppColors.green,
+              ],
+              begin: Alignment.topCenter,
+              end: const Alignment(0.0, 15),
+            ),
           ),
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+        Padding(
+          padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
@@ -83,7 +116,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                       'Papa',
                       style: TextStyle(
                         color: AppColors.green,
-                        fontSize: 64,
+                        fontSize: 44,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
@@ -91,14 +124,13 @@ class _CadastroScreenState extends State<CadastroScreen> {
                       'Capim',
                       style: TextStyle(
                         color: AppColors.green,
-                        fontSize: 64,
+                        fontSize: 44,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
-
+                const SizedBox(height: 25),
                 const Text(
                   'Faça parte da primeira rede social da Bahia!',
                   textAlign: TextAlign.center,
@@ -108,8 +140,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 50),
-
+                const SizedBox(height: 25),
                 TextFormField(
                   controller: _loginController,
                   style: const TextStyle(color: Colors.white),
@@ -136,7 +167,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-
                 TextFormField(
                   controller: _nameController,
                   style: const TextStyle(color: Colors.white),
@@ -163,7 +193,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
@@ -191,7 +220,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-
                 TextFormField(
                   controller: _passwordConfirmController,
                   obscureText: true,
@@ -219,7 +247,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   },
                 ),
                 const SizedBox(height: 30),
-
                 _isLoading
                     ? const CircularProgressIndicator()
                     : SizedBox(
@@ -244,7 +271,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         ),
                       ),
                 const SizedBox(height: 40),
-
                 Center(
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
@@ -270,8 +296,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
               ],
             ),
           ),
-        ),
-      ),
+        )
+      ]),
     );
   }
 }

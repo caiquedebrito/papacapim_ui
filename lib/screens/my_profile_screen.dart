@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import 'edit_profile_screen.dart'; // Importação da tela de edição
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import 'package:papacapim_ui/screens/login_screen.dart';
+import 'edit_profile_screen.dart';
+import '../components/bottom_navegation.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -23,7 +25,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     _loadProfile();
   }
 
-  // Simula o carregamento dos dados do perfil
   Future<void> _loadProfile() async {
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
@@ -54,7 +55,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     });
   }
 
-  // Função para excluir uma postagem
   void _deletePost(int index) {
     setState(() {
       _userPosts.removeAt(index);
@@ -68,9 +68,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Perfil"),
-      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : DefaultTabController(
@@ -78,7 +76,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Cabeçalho com informações do usuário
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -88,35 +85,42 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                           _userData["name"] ?? "",
                           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(height: 5),
                         Text(
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
-                        // const SizedBox(height: 10),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Text("${_userData["followers"]} Seguidores"),
-                        //     Text("${_userData["following"]} Seguindo"),
-                        //   ],
-                        // ),
-                        // const SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-                            );
-                          },
-                          child: const Text("Editar Perfil"),
-                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: const Text("Editar Perfil"),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.go('/login');
+                              },
+                              icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.secondary,)
+                            )
+                          ],
+                        )
                       ],
                     ),
                   ),
                   // TabBar para alternar entre postagens e seguidores
                   const TabBar(
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
+                    indicatorColor: Color(0xFFD8FF6F),
+                    labelColor: Colors.white,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Postagens"),
@@ -126,7 +130,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        // Aba de Postagens do Usuário
                         _userPosts.isEmpty
                             ? const Center(child: Text("Nenhuma postagem"))
                             : ListView.builder(
@@ -143,7 +146,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                   );
                                 },
                               ),
-                        // Aba de Seguidores
                         _followers.isEmpty
                             ? const Center(child: Text("Nenhum seguidor"))
                             : ListView.builder(

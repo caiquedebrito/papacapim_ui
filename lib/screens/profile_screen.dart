@@ -51,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Função para excluir uma postagem
   void _deletePost(int index) {
     setState(() {
       _userPosts.removeAt(index);
@@ -65,11 +64,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         title: const Text("Perfil"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary,))
           : DefaultTabController(
               length: 2,
               child: Column(
@@ -79,6 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           _userData["name"] ?? "",
@@ -88,12 +90,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           "@${_userData["login"]}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
+                        const SizedBox(height: 8,),
+                        const Text("Desde 2024"),
+                        const SizedBox(height: 16,),
                         Text(
                           "${_followers.length} seguidores",
                         ),
-                        Text("Desde 2024"),
+                        const SizedBox(height: 8,),
                         ElevatedButton(
                           onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                          ),
                           child: const Text("Seguir"),
                         ),
                       ],
@@ -101,8 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   // TabBar para alternar entre postagens e seguidores
                   const TabBar(
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
+                    indicatorColor: Color(0xFFD8FF6F),
+                    labelColor: Colors.white,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Postagens"),
