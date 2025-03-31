@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
+import 'package:papacapim_ui/states/global_state.dart';
 import 'edit_profile_screen.dart';
 import '../components/bottom_navegation.dart';
 
@@ -108,6 +109,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                             ),
                             IconButton(
                               onPressed: () {
+                                GlobalSession().logout();
                                 context.go('/login');
                               },
                               icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.secondary,)
