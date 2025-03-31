@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:papacapim_ui/components/bottom_navegation.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/screens/cadastro_screen.dart';
 import 'package:papacapim_ui/screens/feed_screen.dart';
 import '../states/global_state.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,20 +43,26 @@ class _LoginScreenState extends State<LoginScreen> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "login": _loginController.text,
-          "senha": _passwordController.text,
+          "password": _passwordController.text,
         }),
       );
 
+      
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final session = Session.fromJson(data);
         GlobalSession().session = session;
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => FeedScreen()),
-        );
+        setState(() {
+          _isLoading = false;
+        });
+        GoRouter.of(context).go('/feed');
+        context.go('/feed');
       } else {
+        setState(() {
+          _isLoading = false;
+        });
+
         final Map<String, dynamic> body = jsonDecode(response.body);
         final errorMsg = body["message"] ?? "Erro ao efetuar login";
         ScaffoldMessenger.of(context).showSnackBar(
@@ -229,12 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CadastroScreen(),
-                            ),
-                          );
+                          context.go('/cadastro');
                         },
                         child: Text(
                           'Novo no Papacapim? Registrar',
