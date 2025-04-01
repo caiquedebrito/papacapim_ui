@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import 'package:papacapim_ui/screens/login_screen.dart';
 import 'package:papacapim_ui/states/global_state.dart';
 import 'package:papacapim_ui/states/user_state.dart';
 import 'edit_profile_screen.dart';
@@ -48,13 +47,13 @@ class _ProfileScreenState extends State<MyProfileScreen> {
       }
 
       final data = jsonDecode(response.body); 
-
+      
       Map<String, dynamic> userData = {
-        "id": data["id"],
+        "user_id": GlobalSession().session?.userId,
         "name": data["name"],
         "login": data["login"],
-        "createdAt": data["created_at"],
-        "updatedAt": data["updated_at"],
+        "created_at": data["created_at"],
+        "updated_at": data["updated_at"],
       };
 
       final user = User.fromJson(userData);
@@ -68,6 +67,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
       setState(() {
         _isLoading = false;
       });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Erro ao carregar dados do usuário")),
       );

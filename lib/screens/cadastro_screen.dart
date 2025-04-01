@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/models/CreatedUser.dart';
-import 'package:papacapim_ui/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 
 class CadastroScreen extends StatefulWidget {

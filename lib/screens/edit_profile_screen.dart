@@ -49,12 +49,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     Map<String, dynamic> userData = {};
-    if (_loginController.text.isNotEmpty) {
+    if (_loginController.text.isNotEmpty && _loginController.text != UserState().user?.login) {
       userData["login"] = _loginController.text;
     }
-    if (_nameController.text.isNotEmpty) {
+
+    if (_nameController.text.isNotEmpty && _nameController.text != UserState().user?.name) {
       userData["name"] = _nameController.text;
     }
+
     if (_passwordController.text.isNotEmpty) {
       userData["password"] = _passwordController.text;
       userData["password_confirmation"] = _confirmPasswordController.text;
@@ -80,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final url = Uri.parse("https://api.papacapim.just.pro.br/users/$userId");
       final response = await http.patch(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {"x-session-token": GlobalSession().session?.token ?? "",  "Content-Type": "application/json"},
         body: jsonEncode({"user": userData}),
       );
 
@@ -97,13 +99,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           );
           Navigator.pop(context);
         }
-      } else {
-        final body = jsonDecode(response.body);
-        final errorMsg = body["message"] ?? "Erro ao atualizar perfil";
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMsg)),
-        );
-      }
+      } 
+      
+      // else {
+      //   final body = jsonDecode(response.body);
+      //   final errorMsg = body["message"] ?? "Erro ao atualizar perfil";
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text(errorMsg)),
+      //   );
+      // }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erro: $e")),
