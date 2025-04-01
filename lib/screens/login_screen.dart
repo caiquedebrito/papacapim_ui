@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:papacapim_ui/components/bottom_navegation.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
-import 'package:papacapim_ui/screens/cadastro_screen.dart';
-import 'package:papacapim_ui/screens/feed_screen.dart';
 import '../states/global_state.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoading = false;
         });
-        GoRouter.of(context).go('/feed');
+
         context.go('/feed');
       } else {
         setState(() {

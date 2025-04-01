@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import '../components/bottom_navegation.dart';
 
 class NewPostScreen extends StatefulWidget {
   const NewPostScreen({super.key});
@@ -12,7 +12,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
   final TextEditingController _postController = TextEditingController();
   bool _isLoading = false;
 
-  // Função para simular o envio da postagem
   Future<void> _handlePost() async {
     if (_postController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -85,7 +84,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
         ),
       ),
 
-      // Barra de navegação inferior
       bottomNavigationBar: const BottomNavigation(currentIndex: 2),
     );
   }

@@ -48,7 +48,6 @@ class _RepliesScreenState extends State<RepliesScreen> {
       appBar: AppBar(title: const Text("Respostas")),
       body: Column(
         children: [
-          // Exibe o post original
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: PostCard(
@@ -60,7 +59,6 @@ class _RepliesScreenState extends State<RepliesScreen> {
 
           const Divider(),
 
-          // Lista de respostas
           Expanded(
             child: _replies.isEmpty
                 ? const Center(child: Text("Nenhuma resposta ainda"))
@@ -81,7 +79,6 @@ class _RepliesScreenState extends State<RepliesScreen> {
                   ),
           ),
 
-          // Campo para responder
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(

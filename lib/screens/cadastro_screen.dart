@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/models/CreatedUser.dart';
-import 'package:papacapim_ui/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 
 class CadastroScreen extends StatefulWidget {
@@ -54,7 +53,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
       return throw Exception('Erro ao criar usuário');
     }
 
-    print('Response body: ${response.body}');
     return Createduser.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
@@ -66,8 +64,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
       );
       return;
     }
-
-    print('Login: ${_loginController.text}; Name: ${_nameController.text}; Password: ${_passwordController.text}; Password Confirm: ${_passwordConfirmController.text}');
 
     setState(() {
       _isLoading = true;

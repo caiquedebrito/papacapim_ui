@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import '../components/bottom_navegation.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class FeedScreen extends StatelessWidget {
     ];
 
     return DefaultTabController(
-      length: 2, // Número de abas
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,

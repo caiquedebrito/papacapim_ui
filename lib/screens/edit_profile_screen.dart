@@ -28,7 +28,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  // Simula o envio das alterações
   Future<void> _saveChanges() async {
     if (_passwordController.text.isNotEmpty &&
         _passwordController.text != _confirmPasswordController.text) {
