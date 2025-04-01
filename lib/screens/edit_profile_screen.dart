@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:papacapim_ui/states/global_state.dart';
+import 'package:papacapim_ui/states/user_state.dart';
+import 'package:http/http.dart' as http;
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -20,12 +25,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _loadUserData();
   }
 
-  // Simula o carregamento dos dados do usuário
-  void _loadUserData() {
-    setState(() {
-      _nameController.text = "João Silva";
-      _loginController.text = "joaosilva";
-    });
+  Future<void> _loadUserData() async {
+    try {
+      final user = UserState().user;
+      setState(() {
+        _nameController.text = user?.name ?? "";
+        _loginController.text = user?.login ?? "";
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Erro ao carregar dados do usuário")),
+      );
+    }
   }
 
   Future<void> _saveChanges() async {
@@ -37,22 +48,144 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
+    Map<String, dynamic> userData = {};
+    if (_loginController.text.isNotEmpty && _loginController.text != UserState().user?.login) {
+      userData["login"] = _loginController.text;
+    }
+
+    if (_nameController.text.isNotEmpty && _nameController.text != UserState().user?.name) {
+      userData["name"] = _nameController.text;
+    }
+
+    if (_passwordController.text.isNotEmpty) {
+      userData["password"] = _passwordController.text;
+      userData["password_confirmation"] = _confirmPasswordController.text;
+    }
+
+    if (userData.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Nenhuma alteração realizada")),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final userId = UserState().user?.id;
+      if (userId == null) {
+        throw Exception("Usuário não encontrado");
+      }
 
+      final url = Uri.parse("https://api.papacapim.just.pro.br/users/$userId");
+      final response = await http.patch(
+        url,
+        headers: {"x-session-token": GlobalSession().session?.token ?? "",  "Content-Type": "application/json"},
+        body: jsonEncode({"user": userData}),
+      );
+
+      if (response.statusCode == 200) {
+        if (_passwordController.text.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Senha alterada. Faça login novamente.")),
+          );
+          GlobalSession().logout();
+          context.go('/login');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Perfil atualizado com sucesso!")),
+          );
+          Navigator.pop(context);
+        }
+      } 
+      
+      // else {
+      //   final body = jsonDecode(response.body);
+      //   final errorMsg = body["message"] ?? "Erro ao atualizar perfil";
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text(errorMsg)),
+      //   );
+      // }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _deleteUser() async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Excluir Conta"),
+      content: const Text(
+        "Tem certeza que deseja excluir sua conta? Essa ação não poderá ser desfeita.",
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text("Cancelar"),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text("Excluir", style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed == true) {
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Perfil atualizado com sucesso!")),
-    );
+    try {
+      final userId = UserState().user?.id;
+      if (userId == null) {
+        throw Exception("Usuário não encontrado");
+      }
 
-    Navigator.pop(context); // Retorna para a tela de perfil
+      final url = Uri.parse("https://api.papacapim.just.pro.br/users/$userId");
+
+      final response = await http.delete(
+        url,
+        headers: {
+          "x-session-token": GlobalSession().session?.token ?? '',
+        },
+      );
+
+      if (response.statusCode == 204) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Usuário excluído com sucesso.")),
+        );
+        GlobalSession().logout();
+        UserState().user = null;
+        context.go('/login');
+      } else {
+        final body = jsonDecode(response.body);
+        final errorMsg = body["message"] ?? "Erro ao excluir conta";
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMsg)),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
+}
+
 
   @override
   void dispose() {
@@ -70,55 +203,96 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: const Text("Editar Perfil"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: "Nome",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _loginController,
-              decoration: const InputDecoration(
-                labelText: "Login",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: "Nova Senha",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: "Confirmar Senha",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _saveChanges,
-                    child: const Text("Salvar Alterações"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                    ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            child: Column(
+              children: [
+                // Avatar do usuário
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  child: const Icon(Icons.person, size: 40, color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                // Campo Nome
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Nome",
+                    border: OutlineInputBorder(),
                   ),
-          ],
+                ),
+                const SizedBox(height: 16),
+                // Campo Login
+                TextField(
+                  controller: _loginController,
+                  decoration: const InputDecoration(
+                    labelText: "Login",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Campo Nova Senha
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Nova Senha",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Campo Confirmar Senha
+                TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Confirmar Senha",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Botões de ação
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : Column(
+                        children: [
+                          // Botão para salvar alterações
+                          ElevatedButton(
+                            onPressed: _saveChanges,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: Theme.of(context).colorScheme.secondary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text("Salvar Alterações"),
+                          ),
+                          const SizedBox(height: 12),
+                          // Botão para excluir a conta
+                          OutlinedButton(
+                            onPressed: _deleteUser,
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              side: const BorderSide(color: Colors.red),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text("Excluir Conta", style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      )
+              ],
+            ),
+          ),
         ),
       ),
     );

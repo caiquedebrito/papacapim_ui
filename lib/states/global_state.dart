@@ -1,5 +1,6 @@
 class Session {
   final int id;
+  final int userId;
   final String userLogin;
   final String token;
   final String ip;
@@ -8,6 +9,7 @@ class Session {
 
   Session({
     required this.id,
+    required this.userId,
     required this.userLogin,
     required this.token,
     required this.ip,
@@ -18,6 +20,7 @@ class Session {
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
       id: json["id"],
+      userId: json["user_id"],
       userLogin: json["user_login"],
       token: json["token"],
       ip: json["ip"],
