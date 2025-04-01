@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/constants/app_colors.dart';
 import 'package:papacapim_ui/models/CreatedUser.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
@@ -34,9 +35,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
   Future<Createduser> _createUser() async {
     final response = await http.post(
       Uri.parse('https://api.papacapim.just.pro.br/users'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
+      headers: {"Content-Type": "application/json"},
       body: json.encode({
         'user': {
           'login': _loginController.text,
@@ -47,10 +46,15 @@ class _CadastroScreenState extends State<CadastroScreen> {
       })
     );
 
-    if (response.statusCode != 201) {
-      throw Exception('Erro ao criar usuário');
+    if (response.statusCode == 422) {
+      return throw Exception('Usuário já cadastrado');
     }
 
+    if (response.statusCode != 201) {
+      return throw Exception('Erro ao criar usuário');
+    }
+
+    print('Response body: ${response.body}');
     return Createduser.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
@@ -63,9 +67,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
       return;
     }
 
+    print('Login: ${_loginController.text}; Name: ${_nameController.text}; Password: ${_passwordController.text}; Password Confirm: ${_passwordConfirmController.text}');
+
     setState(() {
       _isLoading = true;
     });
+
     try {
       Createduser user = await _createUser();
 
@@ -73,16 +80,21 @@ class _CadastroScreenState extends State<CadastroScreen> {
         SnackBar(content: Text('Usuário ${user.login} Cadastro realizado com sucesso')),
       );
 
-      Navigator.pop(context);
-    } catch(error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao cadastrar usuário!')),
-      );
-    } finally {
       setState(() {
         _isLoading = false;
       });
-    }   
+
+      context.go('/login');
+    } catch(error) {
+      String e = error.toString();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e)),
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -276,12 +288,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
+                        context.go('/login');
                       },
                       child: const Text(
                         'Já possui conta? Voltar para login',

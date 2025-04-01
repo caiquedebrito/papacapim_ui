@@ -35,5 +35,9 @@ class GlobalSession {
     return _instance;
   }
 
+  logout() {
+    session = null;
+  }
+
   GlobalSession._internal();
 }
