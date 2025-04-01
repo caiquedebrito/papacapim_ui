@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
+import 'package:papacapim_ui/components/logout_button.dart';
 import 'package:papacapim_ui/components/post_card.dart';
-import 'package:papacapim_ui/screens/login_screen.dart';
 import 'package:papacapim_ui/states/global_state.dart';
 import 'edit_profile_screen.dart';
 import '../components/bottom_navegation.dart';
+import 'package:http/http.dart' as http;
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -66,6 +67,8 @@ class _ProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,13 +110,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                               ),
                               child: const Text("Editar Perfil"),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                GlobalSession().logout();
-                                context.go('/login');
-                              },
-                              icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.secondary,)
-                            )
+                            const LogoutButton(),
                           ],
                         )
                       ],
