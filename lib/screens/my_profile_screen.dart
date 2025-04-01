@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
 import 'package:papacapim_ui/screens/login_screen.dart';
 import 'package:papacapim_ui/states/global_state.dart';
+import 'package:papacapim_ui/states/user_state.dart';
 import 'edit_profile_screen.dart';
 import '../components/bottom_navegation.dart';
 
@@ -27,33 +31,47 @@ class _ProfileScreenState extends State<MyProfileScreen> {
   }
 
   Future<void> _loadProfile() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      _isLoading = false;
-      _userData = {
-        "name": "João Silva",
-        "login": "joaosilva",
-        "followers": 120,
-        "following": 80,
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var url = Uri.parse("https://api.papacapim.just.pro.br/users/${GlobalSession().session?.userLogin}");
+
+      final response = await http.get(
+        url,
+        headers: {"x-session-token": GlobalSession().session?.token ?? ""},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Erro ao carregar dados do usuário");
+      }
+
+      final data = jsonDecode(response.body); 
+
+      Map<String, dynamic> userData = {
+        "id": data["id"],
+        "name": data["name"],
+        "login": data["login"],
+        "createdAt": data["created_at"],
+        "updatedAt": data["updated_at"],
       };
-      _userPosts = [
-        {
-          "userName": "João Silva",
-          "userLogin": "joaosilva",
-          "content": "Minha primeira postagem!"
-        },
-        {
-          "userName": "João Silva",
-          "userLogin": "joaosilva",
-          "content": "Mais um post no meu feed!"
-        },
-      ];
-      _followers = [
-        {"name": "Maria Oliveira", "login": "maria_oliveira"},
-        {"name": "Carlos Souza", "login": "carlossouza"},
-        {"name": "Ana Paula", "login": "anapaula"},
-      ];
-    });
+
+      final user = User.fromJson(userData);
+      UserState().user = user;
+
+      setState(() {
+        _userData = userData;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Erro ao carregar dados do usuário")),
+      );
+    }
   }
 
   void _deletePost(int index) {
