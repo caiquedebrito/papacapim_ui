@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:papacapim_ui/screens/profile_screen.dart';
-import '../components/bottom_navegation.dart'; // Importação da navegação reutilizável
+import 'package:papacapim_ui/states/global_state.dart';
+import '../components/bottom_navegation.dart';
 import '../constants/app_colors.dart';
+import '../models/user.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -12,39 +18,51 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, String>> _allUsers = []; // Lista de todos os usuários
-  List<Map<String, String>> _filteredUsers = []; // Lista filtrada
+  List<User> _users = [];
+  bool _isLoading = false;
+  String _error = '';
 
   @override
   void initState() {
     super.initState();
-    _loadUsers();
+    _loadUsers(); // carrega todos na inicialização
   }
 
-  // Simula o carregamento dos usuários
-  Future<void> _loadUsers() async {
-    await Future.delayed(const Duration(seconds: 2));
+  Future<void> _loadUsers({String search = ''}) async {
     setState(() {
-      _allUsers = [
-        {"name": "João Silva", "login": "joaosilva"},
-        {"name": "Maria Oliveira", "login": "maria_oliveira"},
-        {"name": "Carlos Souza", "login": "carlossouza"},
-        {"name": "Ana Paula", "login": "anapaula"},
-        {"name": "Lucas Ferreira", "login": "lucasf"},
-      ];
-      _filteredUsers = List.from(_allUsers); // Começa com todos os usuários
+      _isLoading = true;
+      _error = '';
     });
-  }
 
-  // Filtra os usuários conforme a pesquisa
-  void _filterUsers(String query) {
-    setState(() {
-      _filteredUsers = _allUsers
-          .where((user) =>
-              user["name"]!.toLowerCase().contains(query.toLowerCase()) ||
-              user["login"]!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+    final token = GlobalSession().session?.token ?? '';
+    final uri = Uri.parse('https://api.papacapim.just.pro.br/users')
+        .replace(queryParameters: {
+      'search': search,
+      'page': '1',
     });
+
+    try {
+      final resp = await http.get(
+        uri,
+        headers: {
+          'x-session-token': token,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final List<dynamic> jsonList = jsonDecode(resp.body);
+        setState(() {
+          _users = jsonList.map((e) => User.fromJson(e)).toList();
+        });
+      } else {
+        setState(() => _error = 'Erro ${resp.statusCode} ao buscar usuários.');
+      }
+    } catch (e) {
+      setState(() => _error = 'Falha de conexão: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -63,53 +81,59 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
-              onChanged: _filterUsers,
-              decoration: const InputDecoration(
+              textInputAction: TextInputAction.search,
+              onSubmitted: (value) => _loadUsers(search: value),
+              decoration: InputDecoration(
                 hintText: "Digite o nome ou @usuário...",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.grey,
-                    width: 2.0,
-                  ),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 2.0),
                 ),
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          _loadUsers(); // recarrega todos
+                        },
+                      )
+                    : null,
               ),
             ),
           ),
-          Expanded(
-            child: _filteredUsers.isEmpty
-                ? const Center(child: Text("Nenhum usuário encontrado"))
-                : ListView.builder(
-                    itemCount: _filteredUsers.length,
-                    itemBuilder: (context, index) {
-                      final user = _filteredUsers[index];
-                      return ListTile(
-                        title: Text(user["name"]!,
-                            style: const TextStyle(color: Colors.white)),
-                        subtitle: Text("@${user["login"]}",
-                            style: const TextStyle(
-                                color: Color.fromARGB(171, 255, 255, 255),
-                                fontSize: 12)),
-                        trailing: const Icon(Icons.arrow_forward,
-                            color: Color(0xFFD8FF6F)),
-                        onTap: () {
-                          // TODO: Implementar a navegação para o perfil do usuário
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ProfileScreen(),
-                            ),
-                          );
-                        },
+          if (_isLoading)
+            const Expanded(child: Center(child: CircularProgressIndicator()))
+          else if (_error.isNotEmpty)
+            Expanded(child: Center(child: Text(_error, style: const TextStyle(color: Colors.white))))
+          else if (_users.isEmpty)
+            const Expanded(child: Center(child: Text("Nenhum usuário encontrado", style: TextStyle(color: Colors.white))))
+          else
+            Expanded(
+              child: ListView.builder(
+                itemCount: _users.length,
+                itemBuilder: (context, i) {
+                  final u = _users[i];
+                  return ListTile(
+                    title: Text(u.name, style: const TextStyle(color: Colors.white)),
+                    subtitle: Text("@${u.login}",
+                        style: const TextStyle(
+                            color: Color.fromARGB(171, 255, 255, 255), fontSize: 12)),
+                    trailing: const Icon(Icons.arrow_forward, color: Color(0xFFD8FF6F)),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProfileScreen(),
+                        ),
                       );
                     },
-                  ),
-          ),
+                  );
+                },
+              ),
+            ),
         ],
       ),
-
-      bottomNavigationBar: const BottomNavigation(
-          currentIndex: 1),
+      bottomNavigationBar: const BottomNavigation(currentIndex: 1),
     );
   }
 }
