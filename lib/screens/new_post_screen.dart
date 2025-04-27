@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:papacapim_ui/states/global_state.dart';
 
@@ -49,7 +50,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),
         );
-        Navigator.pop(context);
+        context.go('/feed');
       } else {
         final error = jsonDecode(response.body)['error'] ?? 'Erro desconhecido';
         ScaffoldMessenger.of(context).showSnackBar(

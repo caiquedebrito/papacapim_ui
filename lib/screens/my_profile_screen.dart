@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/logout_button.dart';
@@ -10,7 +9,6 @@ import 'package:papacapim_ui/states/global_state.dart';
 import 'package:papacapim_ui/states/user_state.dart';
 import 'edit_profile_screen.dart';
 import '../components/bottom_navegation.dart';
-import 'package:http/http.dart' as http;
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -155,7 +153,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                 itemBuilder: (context, index) {
                                   final post = _userPosts[index];
                                   return PostCard(
-                                    userName: post["userName"]!,
+                                    postId: index.toString(),
                                     userLogin: post["userLogin"]!,
                                     postContent: post["content"]!,
                                     onDelete: () => _deletePost(index),

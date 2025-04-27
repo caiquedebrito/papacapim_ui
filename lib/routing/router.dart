@@ -81,15 +81,15 @@ GoRouter router() => GoRouter(
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   final bool loggedIn = GlobalSession().session != null;
-    final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
+  final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
 
-    if (!loggedIn && !loggingIn) {
-      return '/login';
-    }
-    
-    if (loggedIn && loggingIn) {
-      return '/feed';
-    }
+  if (!loggedIn && !loggingIn) {
+    return '/login';
+  }
+  
+  if (loggedIn && loggingIn) {
+    return '/feed';
+  }
 
-    return null;
+  return null;
 }

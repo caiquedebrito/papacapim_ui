@@ -3,7 +3,7 @@ import 'package:papacapim_ui/screens/profile_screen.dart';
 import '../screens/replies_screen.dart';
 
 class PostCard extends StatelessWidget {
-  final String userName;
+  final String postId;
   final String userLogin;
   final String postContent;
   final VoidCallback? onLike;
@@ -15,17 +15,15 @@ class PostCard extends StatelessWidget {
 
   const PostCard({
     Key? key,
-    required this.userName,
+    required this.postId,
     required this.userLogin,
     required this.postContent,
     this.onLike,
     this.onComment,
     this.onDelete,
     this.onUserTap,
-    this.showDeleteButton =
-        false, // Define se o botão de deletar aparecerá (para perfil do usuário)
-    this.showFollowerButton =
-        true, // Define se o botão de seguir aparecerá (para outros usuários)
+    this.showDeleteButton = false, 
+    this.showFollowerButton = true,
   }) : super(key: key);
 
   @override
@@ -42,7 +40,6 @@ class PostCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Nome do usuário e botão de opções/excluir
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -101,21 +98,18 @@ class PostCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // Conteúdo da postagem
               Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 8.0,
-                    horizontal: 13.0), // Espaço em cima, embaixo e nas laterais
+                    horizontal: 13.0), 
                 child: Text(
                   postContent,
                   style: const TextStyle(
-                      // fontWeight: FontWeight.normal,
                       fontSize: 16,
                       color: Colors.white),
                 ),
               ),
 
-              // Botões de curtir e comentar
               Row(
                 children: [
                   Padding(
@@ -138,11 +132,13 @@ class PostCard extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RepliesScreen(
-                                    userName: userName,
-                                    userLogin: userLogin,
-                                    postContent: postContent,
-                                  )));
+                            builder: (context) => RepliesScreen(
+                              userName: userLogin,
+                              userLogin: userLogin,
+                              postContent: postContent,
+                            )
+                          )
+                      );
                     },
                   ),
                 ],

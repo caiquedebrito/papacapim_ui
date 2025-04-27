@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 itemBuilder: (context, index) {
                                   final post = _userPosts[index];
                                   return PostCard(
-                                    userName: post["userName"]!,
+                                    postId: index.toString(),
                                     userLogin: post["userLogin"]!,
                                     postContent: post["content"]!,
                                     onDelete: () => _deletePost(index),

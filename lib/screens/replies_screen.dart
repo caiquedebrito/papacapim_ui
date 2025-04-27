@@ -51,7 +51,7 @@ class _RepliesScreenState extends State<RepliesScreen> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: PostCard(
-              userName: widget.userName,
+              postId: "1",
               userLogin: widget.userLogin,
               postContent: widget.postContent,
             ),

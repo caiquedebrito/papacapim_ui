@@ -26,14 +26,10 @@ class _FeedScreenState extends State<FeedScreen> {
     _followingFuture = fetchPosts(feed: 1);
   }
 
-  Future<List<Post>> fetchPosts({required int feed, int page = 1}) async {
+  Future<List<Post>> fetchPosts({int feed = 0, int page = 1}) async {
     final token = GlobalSession().session?.token ?? '';
-    final uri = Uri.parse('https://api.papacapim.just.pro.br/posts')
-        .replace(queryParameters: {
-      'feed': feed.toString(),
-      'page': page.toString(),
-    });
-
+    final uri = Uri.parse('https://api.papacapim.just.pro.br/posts');
+    
     final response = await http.get(
       uri,
       headers: {
@@ -50,37 +46,86 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Widget _buildPostList(Future<List<Post>> future, {bool showFollowerButton = true}) {
-    return FutureBuilder<List<Post>>(
+  Future<void> _onRefresh({required int feed}) async {
+    try {
+      if (feed == 0) {
+        final posts = await fetchPosts(feed: 0);
+        if (mounted) {
+          setState(() {
+            _myFeedFuture = Future.value(posts);
+          });
+        }
+      } else {
+        final posts = await fetchPosts(feed: 1);
+        if (mounted) {
+          setState(() {
+            _followingFuture = Future.value(posts);
+          });
+        }
+      }
+    } catch (e) {
+      print('Error refreshing: $e');
+    }
+  }
+
+  Widget _buildPostList(
+  Future<List<Post>> future, {
+  bool showFollowerButton = true,
+  required int feed,
+}) {
+  return RefreshIndicator(
+    onRefresh: () => _onRefresh(feed: feed),
+    child: FutureBuilder<List<Post>>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 200),
+              Center(child: CircularProgressIndicator()),
+            ],
+          );
         }
+
         if (snapshot.hasError) {
-          return Center(child: Text('Erro: ${snapshot.error}'));
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 200),
+              Center(child: Text('Erro: ${snapshot.error}')),
+            ],
+          );
         }
+
         final posts = snapshot.data!;
         if (posts.isEmpty) {
-          return const Center(child: Text('Nenhuma postagem encontrada.'));
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 200),
+              Center(child: Text('Nenhuma postagem encontrada.')),
+            ],
+          );
         }
+
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: posts.length,
           itemBuilder: (context, i) {
             final p = posts[i];
             return PostCard(
-              userName: '@${p.userLogin}',      // se você tiver o nome real, troque aqui
+              postId: p.postId.toString(),
               userLogin: p.userLogin,
               postContent: p.message,
-              onLike: () => print('Curtir post ${p.id}'),
-              onComment: () => print('Comentar post ${p.id}'),
               showFollowerButton: showFollowerButton,
             );
           },
         );
       },
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -131,10 +176,10 @@ class _FeedScreenState extends State<FeedScreen> {
         backgroundColor: const Color(0xFF252525),
         body: TabBarView(
           children: [
-            // Minha aba “Meu Feed”
-            _buildPostList(_myFeedFuture),
-            // Minha aba “Seguindo” (oculta botão “Seguir”)
-            _buildPostList(_followingFuture, showFollowerButton: false),
+            // Minha aba "Meu Feed"
+            _buildPostList(_myFeedFuture, feed: 0),
+            // Minha aba "Seguindo" (oculta botão "Seguir")
+            _buildPostList(_followingFuture, showFollowerButton: false, feed: 1),
           ],
         ),
         bottomNavigationBar: const BottomNavigation(currentIndex: 0),
