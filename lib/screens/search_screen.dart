@@ -1,3 +1,4 @@
+import 'dart:async'; // <- import necessário
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<User> _users = [];
   bool _isLoading = false;
   String _error = '';
+  Timer? _debounce; // <- timer para debounce
 
   @override
   void initState() {
@@ -35,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     final token = GlobalSession().session?.token ?? '';
-    final uri = Uri.parse('https://api.papacapim.just.pro.br/users')
+    final uri = Uri.parse('https://api.papacapim.just.pro.br/users/$search')
         .replace(queryParameters: {
       'search': search,
       'page': '1',
@@ -50,8 +52,22 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       );
 
+      print('Status: ${resp.statusCode}');
+      print('Body: ${resp.body}');
+
       if (resp.statusCode == 200) {
-        final List<dynamic> jsonList = jsonDecode(resp.body);
+        final decoded = jsonDecode(resp.body);
+        print('Decoded: $decoded');
+
+        List<dynamic> jsonList = [];
+
+        if (decoded is List) {
+          jsonList = decoded;
+        } else if (decoded is Map<String, dynamic>) {
+          print('Decoded map: $decoded');
+          jsonList = decoded['data'] ?? [];
+        }
+
         setState(() {
           _users = jsonList.map((e) => User.fromJson(e)).toList();
         });
@@ -65,8 +81,18 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  void _onSearchChanged(String query) {
+    // sempre que digitar, cancela o timer anterior
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _loadUsers(search: query.trim());
+    });
+  }
+
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -82,7 +108,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: TextField(
               controller: _searchController,
               textInputAction: TextInputAction.search,
-              onSubmitted: (value) => _loadUsers(search: value),
+              onChanged: _onSearchChanged, // <-- chama ao digitar
               decoration: InputDecoration(
                 hintText: "Digite o nome ou @usuário...",
                 border: const OutlineInputBorder(
@@ -94,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          _loadUsers(); // recarrega todos
+                          _loadUsers(); // recarrega todos sem filtro
                         },
                       )
                     : null,
@@ -104,9 +130,24 @@ class _SearchScreenState extends State<SearchScreen> {
           if (_isLoading)
             const Expanded(child: Center(child: CircularProgressIndicator()))
           else if (_error.isNotEmpty)
-            Expanded(child: Center(child: Text(_error, style: const TextStyle(color: Colors.white))))
+            Expanded(
+              child: Center(
+                child: Text(
+                  _error,
+                  style: const TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
           else if (_users.isEmpty)
-            const Expanded(child: Center(child: Text("Nenhum usuário encontrado", style: TextStyle(color: Colors.white))))
+            const Expanded(
+              child: Center(
+                child: Text(
+                  "Nenhum usuário encontrado",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
           else
             Expanded(
               child: ListView.builder(
@@ -114,16 +155,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemBuilder: (context, i) {
                   final u = _users[i];
                   return ListTile(
-                    title: Text(u.name, style: const TextStyle(color: Colors.white)),
+                    title: Text(u.name,
+                        style: const TextStyle(color: Colors.white)),
                     subtitle: Text("@${u.login}",
                         style: const TextStyle(
-                            color: Color.fromARGB(171, 255, 255, 255), fontSize: 12)),
-                    trailing: const Icon(Icons.arrow_forward, color: Color(0xFFD8FF6F)),
+                            color: Color.fromARGB(171, 255, 255, 255),
+                            fontSize: 12)),
+                    trailing: const Icon(Icons.arrow_forward,
+                        color: Color(0xFFD8FF6F)),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => ProfileScreen(),
+                          builder: (_) =>
+                              const ProfileScreen(), // lembre de colocar const
                         ),
                       );
                     },
