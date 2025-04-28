@@ -2,6 +2,7 @@ import 'dart:async'; // <- import necessário
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:papacapim_ui/screens/profile_screen.dart';
@@ -52,19 +53,14 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       );
 
-      print('Status: ${resp.statusCode}');
-      print('Body: ${resp.body}');
-
       if (resp.statusCode == 200) {
         final decoded = jsonDecode(resp.body);
-        print('Decoded: $decoded');
 
         List<dynamic> jsonList = [];
 
         if (decoded is List) {
           jsonList = decoded;
         } else if (decoded is Map<String, dynamic>) {
-          print('Decoded map: $decoded');
           jsonList = decoded['data'] ?? [];
         }
 
@@ -85,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      _loadUsers(search: query.trim());
+      searchUser();
     });
   }
 
@@ -125,7 +121,6 @@ class _SearchScreenState extends State<SearchScreen> {
         if (decoded is List) {
           jsonList = decoded;
         } else if (decoded is Map<String, dynamic>) {
-          print('Decoded map: $decoded');
           jsonList = decoded['data'] ?? [];
         }
 
@@ -159,12 +154,17 @@ class _SearchScreenState extends State<SearchScreen> {
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey, width: 2.0),
                 ),
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          searchUser();
+                        },
+                      ),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () {
-                          searchUser();
+                          GoRouter.of(context).go('/feed');
                         },
                       )
                     : null,
@@ -183,15 +183,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             )
-          else if (_users.isEmpty)
-            const Expanded(
-              child: Center(
-                child: Text(
-                  "Nenhum usuário encontrado",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            )
+          // else if (_users.isEmpty)
+          //   const Expanded(
+          //     child: Center(
+          //       child: Text(
+          //         "Nenhum usuário encontrado",
+          //         style: TextStyle(color: Colors.white),
+          //       ),
+          //     ),
+          //   )
           else
             Expanded(
               child: ListView.builder(
