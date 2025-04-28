@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:papacapim_ui/states/global_state.dart';
+import 'package:http/http.dart' as http;
+
+class LikeButton extends StatelessWidget {
+  bool isLiked;
+  final VoidCallback onTap;
+
+  LikeButton({
+    Key? key,
+    required this.isLiked,
+    required this.onTap,
+  }) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isLiked ? Icons.favorite : Icons.favorite,
+        color: isLiked ? Colors.red : Colors.grey,
+      ),
+      onPressed: onTap,
+      tooltip: isLiked ? 'Descurtir' : 'Curtir',
+    );
+  }
+}
