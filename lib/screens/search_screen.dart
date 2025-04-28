@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     final token = GlobalSession().session?.token ?? '';
-    final uri = Uri.parse('https://api.papacapim.just.pro.br/users/$search')
+    final uri = Uri.parse('https://api.papacapim.just.pro.br/users/')
         .replace(queryParameters: {
       'search': search,
       'page': '1',
@@ -82,7 +82,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onSearchChanged(String query) {
-    // sempre que digitar, cancela o timer anterior
     if (_debounce?.isActive ?? false) _debounce?.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -95,6 +94,52 @@ class _SearchScreenState extends State<SearchScreen> {
     _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void searchUser() async {
+    final search = _searchController.text.trim();
+    setState(() {
+      _isLoading = true;
+      _error = '';
+    });
+
+    final token = GlobalSession().session?.token ?? '';
+    final uri = Uri.parse('https://api.papacapim.just.pro.br/users/')
+        .replace(queryParameters: {
+      'search': search,
+    });
+
+     try {
+      final resp = await http.get(
+        uri,
+        headers: {
+          'x-session-token': token,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decoded = jsonDecode(resp.body);
+        List<dynamic> jsonList = [];
+
+        if (decoded is List) {
+          jsonList = decoded;
+        } else if (decoded is Map<String, dynamic>) {
+          print('Decoded map: $decoded');
+          jsonList = decoded['data'] ?? [];
+        }
+
+        setState(() {
+          _users = jsonList.map((e) => User.fromJson(e)).toList();
+        });
+      } else {
+        setState(() => _error = 'Erro ${resp.statusCode} ao buscar usuários.');
+      }
+    } catch (e) {
+      setState(() => _error = 'Falha de conexão: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -119,8 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ? IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () {
-                          _searchController.clear();
-                          _loadUsers(); // recarrega todos sem filtro
+                          searchUser();
                         },
                       )
                     : null,
