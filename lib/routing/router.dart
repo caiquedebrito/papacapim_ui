@@ -58,6 +58,7 @@ GoRouter router() => GoRouter(
       builder: (context, state) {
         final args = state.extra as Map<String, String>;
         return RepliesScreen(
+          postId: args['postId']!,
           userName: args['userName']!,
           userLogin: args['userLogin']!,
           postContent: args['postContent']!,

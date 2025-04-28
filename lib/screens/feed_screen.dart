@@ -115,7 +115,7 @@ class _FeedScreenState extends State<FeedScreen> {
           itemBuilder: (context, i) {
             final p = posts[i];
             return PostCard(
-              postId: p.postId.toString(),
+              postId: p.id.toString(),
               userLogin: p.userLogin,
               postContent: p.message,
               showFollowerButton: showFollowerButton,

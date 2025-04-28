@@ -34,7 +34,6 @@ class PostCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         color: Theme.of(context).colorScheme.primary,
         elevation: 8.0,
-        // shadowColor: Theme.of(context).colorScheme.secondary,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -129,10 +128,11 @@ class PostCard extends StatelessWidget {
                     icon: const Icon(Icons.comment_outlined,
                         color: Color.fromARGB(255, 221, 221, 221)),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RepliesScreen(
+                              postId: postId,
                               userName: userLogin,
                               userLogin: userLogin,
                               postContent: postContent,
