@@ -60,8 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoading = false;
         });
+        
         GoRouter.of(context).go('/feed');
-        context.go('/feed');
       } else {
         setState(() {
           _isLoading = false;
