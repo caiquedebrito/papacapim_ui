@@ -212,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) =>
-                              const ProfileScreen(), // lembre de colocar const
+                              ProfileScreen(userLogin: u.login)
                         ),
                       );
                     },

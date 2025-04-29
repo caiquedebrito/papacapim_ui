@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:papacapim_ui/components/follow_button.dart';
 import 'package:papacapim_ui/components/like_button.dart';
 import 'package:papacapim_ui/screens/profile_screen.dart';
 import 'package:papacapim_ui/states/global_state.dart';
@@ -167,18 +168,18 @@ class _PostCardState extends State<PostCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileScreen()));
-                        },
-                        child: Text(
+                      InkWell(
+                          child: Text(
                           "@${widget.userLogin}",
                           style: TextStyle(
                               fontSize: 16, color: const Color.fromARGB(255, 236, 236, 236)),
                         ),
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfileScreen(userLogin: widget.userLogin)),),
+                          },
                       ),
                       const Padding(
                         padding: EdgeInsets.only(left: 13.0, bottom: 5),
