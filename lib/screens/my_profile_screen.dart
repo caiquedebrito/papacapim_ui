@@ -156,7 +156,6 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                     postId: index.toString(),
                                     userLogin: post["userLogin"]!,
                                     postContent: post["content"]!,
-                                    onDelete: () => _deletePost(index),
                                     showDeleteButton: true,
                                     showFollowerButton: false,
                                   );

@@ -69,10 +69,10 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _buildPostList(
-  Future<List<Post>> future, {
-  bool showFollowerButton = true,
-  required int feed,
-}) {
+    Future<List<Post>> future, {
+    bool showFollowerButton = true,
+    required int feed,
+  }) {
   return RefreshIndicator(
     onRefresh: () => _onRefresh(feed: feed),
     child: FutureBuilder<List<Post>>(
@@ -119,6 +119,7 @@ class _FeedScreenState extends State<FeedScreen> {
               userLogin: p.userLogin,
               postContent: p.message,
               showFollowerButton: showFollowerButton,
+              myPost: p.userLogin == GlobalSession().session?.userLogin,
             );
           },
         );

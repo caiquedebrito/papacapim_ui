@@ -11,9 +11,9 @@ class PostCard extends StatefulWidget {
   final String postId;
   final String userLogin;
   final String postContent;
+  final bool myPost;
   final VoidCallback? onLike;
   final VoidCallback? onComment;
-  final VoidCallback? onDelete;
   final VoidCallback? onUserTap; 
   final bool showDeleteButton;
   final bool showFollowerButton;
@@ -23,9 +23,9 @@ class PostCard extends StatefulWidget {
     required this.postId,
     required this.userLogin,
     required this.postContent,
+    this.myPost = false,
     this.onLike,
     this.onComment,
-    this.onDelete,
     this.onUserTap,
     this.showDeleteButton = false, 
     this.showFollowerButton = true,
@@ -45,6 +45,33 @@ class _PostCardState extends State<PostCard> {
     super.initState();
     _likesFuture = _loadLikes();
     _isLoading = false;
+  }
+
+  Future<void> deletePost() async {
+    final token = GlobalSession().session?.token ?? "";
+    final url = Uri.parse('https://api.papacapim.just.pro.br/posts/${widget.postId}');
+    
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'x-session-token': token,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 204) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Postagem deletada.")),
+        );
+      } else {
+        throw Exception('Falha ao deletar postagem (status ${response.statusCode})');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+    }
   }
 
   Future<List<Likes>> _loadLikes() async {
@@ -175,19 +202,11 @@ class _PostCardState extends State<PostCard> {
                       )
                     ],
                   ),
-                  if (widget.showFollowerButton)
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.secondary,
-                      ),
-                      child: const Text("Seguir",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                  if (widget.showDeleteButton && widget.onDelete != null)
+                  // FollowButton(following: following, onTap: onTap)
+                  if (widget.myPost)
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: widget.onDelete,
+                      onPressed: deletePost,
                     ),
                 ],
               ),
