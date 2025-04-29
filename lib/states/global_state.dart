@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Session {
   final int id;
   final int userId;
@@ -38,8 +40,11 @@ class GlobalSession {
     return _instance;
   }
 
-  logout() {
+  logout() async {
     session = null;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('session');
   }
 
   GlobalSession._internal();

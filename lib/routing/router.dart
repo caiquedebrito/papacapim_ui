@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papacapim_ui/routing/routes.dart';
@@ -12,6 +14,7 @@ import 'package:papacapim_ui/screens/profile_screen.dart';
 import 'package:papacapim_ui/screens/replies_screen.dart';
 import 'package:papacapim_ui/screens/search_screen.dart';
 import 'package:papacapim_ui/states/global_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 GoRouter router() => GoRouter(
   initialLocation: Routes.login,
@@ -81,16 +84,26 @@ GoRouter router() => GoRouter(
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
-  final bool loggedIn = GlobalSession().session != null;
-  final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    String sessionString = prefs.getString('session') ?? '';
 
-  if (!loggedIn && !loggingIn) {
+    if (sessionString.isEmpty) {
+      return '/login';
+    }
+
+    Session session = Session.fromJson(jsonDecode(sessionString));
+    GlobalSession().session = session;
+    
+    final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
+
+    if (loggingIn) {
+      return '/feed';
+    }
+
+  } catch (e) {
     return '/login';
   }
   
-  if (loggedIn && loggingIn) {
-    return '/feed';
-  }
-
   return null;
 }

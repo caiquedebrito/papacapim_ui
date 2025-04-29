@@ -26,11 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Future<void> _saveToken(String token) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('auth_token', token);
-  // }
-
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -53,8 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final session = Session.fromJson(data);     
-        // await _saveToken(session.token);   
 
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('session', jsonEncode(data));
+        
         GlobalSession().session = session;
 
         setState(() {

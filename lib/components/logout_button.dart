@@ -19,7 +19,7 @@ class LogoutButton extends StatelessWidget {
         },
       );
 
-      GlobalSession().logout();
+      await GlobalSession().logout();
       context.go('/login');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
