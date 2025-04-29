@@ -21,12 +21,12 @@ class FollowerCard extends StatelessWidget{
       title: Text(userName),
       subtitle: Text("@${userLogin}"),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProfileScreen(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const ProfileScreen(),
+        //   ),
+        // );
       },
     );
   }

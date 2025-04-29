@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:papacapim_ui/states/global_state.dart';
-import 'package:http/http.dart' as http;
 
 class LikeButton extends StatelessWidget {
   bool isLiked;

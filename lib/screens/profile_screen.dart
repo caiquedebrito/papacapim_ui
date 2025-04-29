@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:papacapim_ui/components/follower_card.dart';
 import 'package:papacapim_ui/components/post_card.dart';
+import 'package:papacapim_ui/models/user.dart';
+import 'package:papacapim_ui/states/global_state.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String? userLogin;
+  final User? userData;
+
+  const ProfileScreen({Key? key, this.userLogin, this.userData }) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -11,7 +19,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
-  Map<String, dynamic> _userData = {};
   List<Map<String, String>> _userPosts = [];
   List<Map<String, String>> _followers = [];
 
@@ -21,34 +28,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadProfile();
   }
 
-  // Simula o carregamento dos dados do perfil
-  Future<void> _loadProfile() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      _isLoading = false;
-      _userData = {
-        "name": "João Silva",
-        "login": "joaosilva",
-        "created_at": "2024",
-      };
-      _userPosts = [
-        {
-          "userName": "João Silva",
-          "userLogin": "joaosilva",
-          "content": "Minha primeira postagem!"
+  Future<User> _loadProfile() async {
+    final token = GlobalSession().session?.token ?? "";
+    print(widget.userLogin);
+    final url = Uri.parse('https://api.papacapim.just.pro.br/users/${widget.userLogin}');
+    
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'x-session-token': token,
+          'Content-Type': 'application/json',
         },
-        {
-          "userName": "João Silva",
-          "userLogin": "joaosilva",
-          "content": "Mais um post no meu feed!"
-        },
-      ];
-      _followers = [
-        {"name": "Maria Oliveira", "login": "maria_oliveira"},
-        {"name": "Carlos Souza", "login": "carlossouza"},
-        {"name": "Ana Paula", "login": "anapaula"},
-      ];
-    });
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data);
+      } else {
+        throw Exception('Falha ao carregar perfil (status ${response.statusCode})');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+      throw Exception("Falha ao carregar perfil");
+    }
   }
 
   void _deletePost(int index) {
@@ -83,15 +88,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _userData["name"] ?? "",
+                          widget.userData?.name ?? "",
                           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "@${_userData["login"]}",
+                          "@${widget.userData?.login}}",
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 8,),
-                        const Text("Desde 2024"),
+                        Text("Desde ${widget.userData?.createdAt}"),
                         const SizedBox(height: 16,),
                         Text(
                           "${_followers.length} seguidores",
