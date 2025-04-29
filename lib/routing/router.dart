@@ -84,26 +84,27 @@ GoRouter router() => GoRouter(
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
+  final String location = state.uri.toString(); 
+  final bool isAuthRoute = location == '/login' || location == '/cadastro';
+
   try {
     final prefs = await SharedPreferences.getInstance();
-    String sessionString = prefs.getString('session') ?? '';
+    final String sessionString = prefs.getString('session') ?? '';
 
     if (sessionString.isEmpty) {
-      return '/login';
+      return isAuthRoute ? null : '/login';
     }
 
-    Session session = Session.fromJson(jsonDecode(sessionString));
+    final session = Session.fromJson(jsonDecode(sessionString));
     GlobalSession().session = session;
-    
-    final bool loggingIn = state.uri.toString() == '/login' || state.uri.toString() == '/cadastro';
 
-    if (loggingIn) {
+    if (isAuthRoute) {
       return '/feed';
     }
 
   } catch (e) {
-    return '/login';
+    return isAuthRoute ? null : '/login';
   }
-  
+
   return null;
 }
