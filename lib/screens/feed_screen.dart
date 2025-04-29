@@ -26,9 +26,18 @@ class _FeedScreenState extends State<FeedScreen> {
     _followingFuture = fetchPosts(feed: 1);
   }
 
-  Future<List<Post>> fetchPosts({int feed = 0, int page = 1}) async {
+  Future<List<Post>> fetchPosts({int feed = 0, int page = 1, String search = '' }) async {
     final token = GlobalSession().session?.token ?? '';
-    final uri = Uri.parse('https://api.papacapim.just.pro.br/posts');
+    Uri uri;
+    
+    if (search.isNotEmpty) {
+      uri = Uri.parse('https://api.papacapim.just.pro.br/posts/')
+          .replace(queryParameters: {
+        'search': search,
+      });
+    } else {
+      uri = Uri.parse('https://api.papacapim.just.pro.br/posts');
+    }
     
     final response = await http.get(
       uri,
@@ -66,6 +75,33 @@ class _FeedScreenState extends State<FeedScreen> {
     } catch (e) {
       print('Error refreshing: $e');
     }
+  }
+
+  showSearchDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Pesquisar postagem'),
+          content: TextField(
+            onSubmitted: (value) async {
+              _myFeedFuture = Future.value(await fetchPosts(search: value));
+              setState(() {
+                _myFeedFuture = _myFeedFuture;
+              });
+              Navigator.pop(context);
+            },
+            decoration: const InputDecoration(hintText: 'Digite o que deseja pesquisar'),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildPostList(
@@ -158,6 +194,24 @@ class _FeedScreenState extends State<FeedScreen> {
               ],
             ),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearchDialog(context);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {
+                  _myFeedFuture = fetchPosts(feed: 0);
+                  _followingFuture = fetchPosts(feed: 1);
+                });
+              },
+            )
+          ],
+
           bottom: const PreferredSize(
             preferredSize: Size.fromHeight(50),
             child: ClipRRect(
