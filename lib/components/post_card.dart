@@ -277,29 +277,3 @@ class Likes {
     );
   }
 }
-
-class Follower {
-  final int id;
-  final String userLogin;
-  final String userName;
-  final String createdAt;
-  final String updatedAt;
-
-  Follower({
-    required this.id,
-    required this.userLogin,
-    required this.userName,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory Follower.fromJson(Map<String, dynamic> json) {
-    return Follower(
-      id: json['id'],
-      userLogin: json['user_login'],
-      userName: json['user_name'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-    );
-  }
-}

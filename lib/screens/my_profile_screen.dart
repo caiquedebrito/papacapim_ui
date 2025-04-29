@@ -167,7 +167,7 @@ class _ProfileScreenState extends State<MyProfileScreen> {
                                 itemCount: _followers.length,
                                 itemBuilder: (context, index) {
                                   final follower = _followers[index];
-                                  return FollowerCard(userName: follower["name"]!, userLogin: follower["login"]!);
+                                  return FollowerCard(userLogin: follower["login"]!);
                                 },
                               ),
                       ],
